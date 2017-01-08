@@ -30,13 +30,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // TODO Create a bitmap which size matches the size of ImageView component (you may have to do this outside onCreate)
-        backgroundBitmap = Bitmap.createBitmap(/*backgroundImageView.getWidth()*/ 200, 200 /*backgroundImageView.getHeight()*/, Bitmap.Config.ARGB_8888);
-        backgroundBitmap.eraseColor(Color.BLACK);
-
-        backgroundImageView.setImageBitmap(backgroundBitmap);
+        backgroundImageView.post(new Runnable() {
+            @Override
+            public void run() {
+                backgroundBitmap = Bitmap.createBitmap(backgroundImageView.getWidth(), backgroundImageView.getHeight(), Bitmap.Config.ARGB_8888);
+                backgroundImageView.setImageBitmap(backgroundBitmap);
+            }
+        });
 
         rnd = new Random();
+
+        //TODO Show toast that tells the rgb value of a new background color
 
     }
 

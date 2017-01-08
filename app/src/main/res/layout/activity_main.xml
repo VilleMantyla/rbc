@@ -7,10 +7,7 @@
         android:id="@+id/background_color"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
+        />
+    <!--android:scaleType="centerCrop"-->
 
-    <!--<Button
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:onClick="randomizeColor"/>-->
 </FrameLayout>
