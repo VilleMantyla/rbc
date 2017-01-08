@@ -7,7 +7,14 @@
         android:id="@+id/background_color"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
-    <!--android:scaleType="centerCrop"-->
+        android:clickable="true"
+        android:onClick="randomizeColor" />
+    <!-- TODO This button is only for debugging, change it to something better looking -->
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="changePhoneBackground"
+        android:textSize="20sp"
+        android:text="@string/change_phone_background" />
 
 </FrameLayout>
