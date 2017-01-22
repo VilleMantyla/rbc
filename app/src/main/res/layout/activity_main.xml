@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
-        android:onClick="randomizeColor" />
+        android:onClick="randomizeBackground" />
     <!-- TODO This button is only for debugging, change it to something better looking -->
     <Button
         android:layout_width="match_parent"
@@ -16,5 +16,39 @@
         android:onClick="changePhoneBackground"
         android:textSize="20sp"
         android:text="@string/change_phone_background" />
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom" >
+    <RadioButton
+        android:id="@+id/radio_sierpinski"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sierpinski"
+        android:onClick="onRadioButtonClicked"
+        android:textColor="#ffffff"
+        android:background="#2d2d2d"
+        android:padding="10dp" />
+    <RadioButton
+        android:id="@+id/radio_lines"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lines"
+        android:onClick="onRadioButtonClicked"
+        android:textColor="#ffffff"
+        android:background="#2d2d2d"
+        android:padding="10dp" />
+    <RadioButton
+        android:id="@+id/radio_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/color"
+        android:onClick="onRadioButtonClicked"
+        android:textColor="#ffffff"
+        android:background="#2d2d2d"
+        android:padding="10dp" />
+    </RadioGroup>
+
 
 </FrameLayout>

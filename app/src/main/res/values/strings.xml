@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Random Background Color</string>
-    <string name="change_phone_background">Change your phone\'s background</string>
+    <string name="change_phone_background">Set as Background</string>
+    <string name="place_holder">na</string>
+    <string name="sierpinski">sierpinski</string>
+    <string name="lines">lines</string>
+    <string name="color">colors</string>
 </resources>
