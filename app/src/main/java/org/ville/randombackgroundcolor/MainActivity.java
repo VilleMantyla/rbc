@@ -84,10 +84,9 @@ public class MainActivity extends AppCompatActivity {
         bdrw = new BitmapDrawable(getResources(), backgroundBitmap);
         backgroundImageView.setBackground(bdrw);
 
-
     }
 
-    public void randomColorPure(View v) {
+    public int randomColorPure() {
         int[] rgb = new int[3];
         int shadeColor = (int)Math.round(Math.random()*2);
         int zeroColor;
@@ -109,11 +108,8 @@ public class MainActivity extends AppCompatActivity {
         rgb[3-shadeColor-zeroColor] = (int)Math.round(Math.random()*255);
 
         int color = Color.rgb(rgb[0], rgb[1], rgb[2]);
-        backgroundBitmap.eraseColor(color);
 
-        bdrw = new BitmapDrawable(getResources(), backgroundBitmap);
-        backgroundImageView.setBackground(bdrw);
-
+        return color;
     }
 
     /** Changes the phone's background.
@@ -130,22 +126,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * To test some graphics drawing
+     * Draws lines randomly.
+     * @param width The width of the line.
+     * @param amount The amount of lines.
      */
-    public void drawLines()
+    public void drawLines(int width, int amount)
     {
         Paint paint = new Paint();
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.BLACK);
-        paint.setStrokeWidth(8);
+        paint.setStrokeWidth(width);
 
         int maxX = backgroundBitmap.getWidth();
         int maxY = backgroundBitmap.getHeight();
 
         //To make sure the line starts from the side when lines's width is more than 1 pixel
-        int lineOffset = 5;
+        int lineOffset = Math.round(width/2);
 
-        for(int i=0; i<7; i++){
+        for(int i=0; i<amount; i++){
 
             //Random staring point for the line along the axis
             int xStart = (int)Math.round(Math.random()*1);
@@ -188,8 +186,12 @@ public class MainActivity extends AppCompatActivity {
         //canvas.drawLine(0.0f, 0.0f, backgroundBitmap.getWidth(), backgroundBitmap.getHeight(), paint);
     }
 
-    /**************************************************/
-    /*************************************************/
+    /**
+     * Gives screen coordinates for equilateral triangle's vertices according to the centroid.
+     * @param centroid
+     * @param sideLength
+     * @return
+     */
     public float[] coordinatesForEquilateralTriangle(float[] centroid, float sideLength){
         float height = (float)(sideLength*((Math.sqrt(3.0))/2.0));
         float[] peak = {centroid[0], centroid[1]-(height*2)/3};
@@ -199,40 +201,33 @@ public class MainActivity extends AppCompatActivity {
         return new float[]{peak[0], peak[1], left[0], left[1], right[0], right[1]};
     }
 
-    public void sierpinskiTriangle(Triangle triangle) {
-        drawTriangle(triangle, Color.YELLOW);
+    public void sierpinskiTriangle(EquilateralTriangle triangle, int bgColor, int trColor) {
+        drawTriangle(triangle, trColor);
 
-        if(triangle.getSideLength()<170.0) {
+        if(triangle.getSideLength()<200.0) {
             return;
         }
         else {
-            Triangle[] triangles;
+            EquilateralTriangle[] triangles;
             triangles = divideTriangle(triangle);
-            sierpinskiTriangle(triangles[1]);
-            sierpinskiTriangle(triangles[2]);
-            sierpinskiTriangle(triangles[3]);
-            destroyTriangle(triangles[0]);
+            sierpinskiTriangle(triangles[1], bgColor, trColor);
+            sierpinskiTriangle(triangles[2], bgColor, trColor);
+            sierpinskiTriangle(triangles[3], bgColor, trColor);
+            destroyTriangle(triangles[0], bgColor);
         }
     }
 
     //first triangle in the array is the middle triangle
-    public Triangle[] divideTriangle(Triangle tr) {
+    public EquilateralTriangle[] divideTriangle(EquilateralTriangle tr) {
         double newSideLength = tr.getSideLength()/2;
-        Triangle top = new Triangle(createTriangleFromPeak(tr.getPeak(), newSideLength));
-        Triangle left = new Triangle(createTriangleFromPeak(new int[]{tr.getPeak()[0]-(int)(newSideLength/2), tr.getPeak()[1]+(int)(tr.getHeight()/2)}, newSideLength));
-        Triangle center = new Triangle(createUpsideDownTriangle(new int[]{tr.getPeak()[0], (int)(tr.getPeak()[1]+tr.getHeight())}, newSideLength));
-        Triangle right = new Triangle(createTriangleFromPeak(new int[]{tr.getPeak()[0]+(int)(newSideLength/2), tr.getPeak()[1]+(int)(tr.getHeight()/2)}, newSideLength));
-        return new Triangle[]{center, top,left, right};
-    }
+        int[] peak = tr.getPeak();
+        double trHeight = tr.getHeight();
+        EquilateralTriangle top    = new EquilateralTriangle(peak, newSideLength);
+        EquilateralTriangle left = new EquilateralTriangle(new int[]{peak[0]-(int)(newSideLength/2), peak[1]+(int)(trHeight/2)}, newSideLength);
+        EquilateralTriangle center = new EquilateralTriangle(createUpsideDownTriangle(new int[]{peak[0], (int)(peak[1]+trHeight)}, newSideLength));
+        EquilateralTriangle right = new EquilateralTriangle(new int[]{peak[0]+(int)(newSideLength/2), peak[1]+(int)(trHeight/2)}, newSideLength);
 
-    //
-    public int[] createTriangleFromPeak(int[] p, double sideLength) {
-        double height = (float)(sideLength*(Math.sqrt(3.0)/2));
-        int[] peak = {p[0], p[1]};
-        int[] left = {(int)(p[0]-sideLength/2), (int)(p[1]+height)};
-        int[] right = {(int)(p[0]+sideLength/2), (int)(p[1]+height)};
-
-        return new int[]{peak[0], peak[1], left[0], left[1], right[0], right[1]};
+        return new EquilateralTriangle[]{center, top,left, right};
     }
 
     public int[] createUpsideDownTriangle(int[] p, double sideLength) {
@@ -243,11 +238,11 @@ public class MainActivity extends AppCompatActivity {
         return new int[]{peak[0], peak[1], left[0], left[1], right[0], right[1]};
     }
 
-    public void destroyTriangle(Triangle t) {
-        drawTriangle(t, Color.BLACK);
+    public void destroyTriangle(EquilateralTriangle t, int color) {
+        drawTriangle(t, color);
     }
 
-    public void drawTriangle(Triangle triangle, int col) {
+    public void drawTriangle(EquilateralTriangle triangle, int col) {
         float[] coordinates = new float[triangle.getVertex().length];
         for(int i=0; i<coordinates.length; i++) {
             coordinates[i] = (float)triangle.getVertex()[i];
@@ -268,40 +263,51 @@ public class MainActivity extends AppCompatActivity {
             case R.id.radio_sierpinski:
                 if (checked)
                     sierpinski = true;
-                    lines = colors = false;
-                    break;
+                lines = colors = false;
+                break;
             case R.id.radio_lines:
                 if (checked)
                     lines = true;
-                    sierpinski = colors = false;
-                    break;
+                sierpinski = colors = false;
+                break;
             case R.id.radio_color:
                 if(checked)
                     colors = true;
-                    sierpinski = lines = false;
-                    break;
+                sierpinski = lines = false;
+                break;
         }
     }
 
-    public void randomizeBackground(View view) {
+    public void createNewBackground(View view) {
         if(sierpinski) {
-            backgroundBitmap.eraseColor(Color.BLACK);
-            Triangle ttt = new Triangle(coordinatesForEquilateralTriangle(new float[]{(float) displaySize[0]/2f, (float) displaySize[1]/2f}, 700f));
-            sierpinskiTriangle(ttt);
+            //backgroundBitmap.eraseColor(Color.BLACK);
+            int bgColor = Color.BLACK;
+            int trColor = randomColorPure();
+            backgroundBitmap.eraseColor(bgColor);
+            double ratio = 4.0/5.0;
+            float[] coordinates = coordinatesForEquilateralTriangle(new float[]{(float) displaySize[0]/2f, (float) displaySize[1]/2f}, (float)(displaySize[0]*ratio));
+            EquilateralTriangle triangle = new EquilateralTriangle(coordinates);
+            sierpinskiTriangle(triangle, bgColor, trColor);
             bdrw = new BitmapDrawable(getResources(), backgroundBitmap);
             backgroundImageView.setBackground(bdrw);
         }
         else if(lines) {
-            randomColorPure(view);
-            drawLines();
+            backgroundBitmap.eraseColor(randomColorPure());
+            bdrw = new BitmapDrawable(getResources(), backgroundBitmap);
+            backgroundImageView.setBackground(bdrw);
+            drawLines(8, 7);
             bdrw = new BitmapDrawable(getResources(), backgroundBitmap);
             backgroundImageView.setBackground(bdrw);
         }
         else if(colors) {
-            randomColorPure(view);
+            backgroundBitmap.eraseColor(randomColorPure());
+            bdrw = new BitmapDrawable(getResources(), backgroundBitmap);
+            backgroundImageView.setBackground(bdrw);
         }
         else {
-            randomColorPure(view);
+            backgroundBitmap.eraseColor(randomColorPure());
+            bdrw = new BitmapDrawable(getResources(), backgroundBitmap);
+            backgroundImageView.setBackground(bdrw);
         }
     }
 

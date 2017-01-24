@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
-        android:onClick="randomizeBackground" />
+        android:onClick="createNewBackground" />
     <!-- TODO This button is only for debugging, change it to something better looking -->
     <Button
         android:layout_width="match_parent"

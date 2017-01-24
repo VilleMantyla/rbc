@@ -4,28 +4,34 @@ package org.ville.randombackgroundcolor;
  * Created by Ville on 20.1.2017.
  */
 
-public class Triangle {
+public class EquilateralTriangle {
 
     private  int[] vertex;
 
-    public Triangle(int[] v) {
+    public EquilateralTriangle(int[] v) {
         vertex = v;
     }
 
-    public Triangle(float[] v) {
+    public EquilateralTriangle(float[] v) {
         vertex = new int[6];
         for(int i=0;i<v.length;i++) {
             vertex[i] = Math.round(v[i]);
         }
     }
 
-    /*public Triangle(int[] peak, double sideLength) {
+    /**
+     * Creates an equilateral triangle that sits on its side.
+     * @param peak
+     * @param sideLength
+     */
+    public EquilateralTriangle(int[] peak, double sideLength) {
         vertex = new int[6];
         double height = (Math.sqrt(3.0)/2)*sideLength;
         vertex[0] = peak[0]; vertex[1] = peak[1];
-        vertex[2] = peak[0]-(int)sideLength/2; vertex[3] = peak[0]+(int)height;
-        vertex[4] = peak[0]+(int)sideLength/2; vertex[5] = peak[0]+(int)height;
-    }*/
+        vertex[2] = peak[0]-(int)sideLength/2; vertex[3] = peak[1]+(int)height;
+        vertex[4] = peak[0]+(int)sideLength/2; vertex[5] = peak[1]+(int)height;
+    }
+
 
     public int[] getVertex() {
         return vertex;
