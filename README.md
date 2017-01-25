@@ -7,4 +7,4 @@ Available backgrounds:
 - (speudo) random lines
 - Sierpinski triangle
 
-*Rbc is an acronym for random background color.*
+*Rbc is an acronym for Random Background Color.*
